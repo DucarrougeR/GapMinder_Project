@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Load D3 from site -->
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  </head>
+    <!-- CSS (Styling) -->
+    <style type="text/css">
+            /* Format X and Y Axis */
+            .axis path,
+            .axis line {
+                fill: none;
+                stroke: black;
+                shape-rendering: crispEdges;
+            }
+            .axis text {
+                font-family: sans-serif;
+                font-size: 11px;
+            }
+    </style>
+    <!-- End CSS (Styling) -->
+ 
+  <body>
+    <h2>Information Vizualisation COMP40610 <br>
+    <img src="icon_play.png" alt="Play Icon" height="42" width="62">
+    </h2>
+
+    <div id="visualization">
+    <!-- Begin D3 Javascript -->
+    <script type="text/javascript">
+        //Load the dataset
+        var dataset;
+        
+        d3.csv("./data2.csv", function(error, data){
+            // handle any data loading errors
+                if(error){
+                    console.log("Something went wrong");
+                    console.log(error);
+                }else{
+                    console.log("Data Loaded");
+
+                    // Assign  the data object loaded to the global dataset variable
+                    dataset = data;
+
+                    //call our function to plot the data
+                    generatePlot();
+                }
+            console.log(dataset.columns);
+        });
+
+
+        // function that will loop through the years to load data for graph:
+        // from 1900 to 1950   --> year += 10
+        // from 1951 to 2015   --> year += 1
+        display_year = 1980;
+        function yearFilter(value){
+                return(value.Year == display_year);
+        }
+
+        // d3.select("h2")
+        //     .on("click", function() {
+        //         return display_year + 1;
+        //     }
+
+        function generatePlot(){
+            var filtered_dataset = dataset.filter(yearFilter);
+            // Setup settings for graphic
+            var canvas_width = 1400;
+            var canvas_height = 700;
+            var padding = 30;  // for chart edges
+
+            // Create scale functions
+            var xScale;
+            // values range from 142 to 182,668, so need a log scale for x
+            xScale = d3.scale.linear()  // yScale is width of graphic
+                            .domain([-1000, d3.max(dataset, function(d) { return d.GDP;})])
+                            .range([padding, canvas_width]); 
+            // xScale = d3.scale.log()
+            //             .domain([0, d3.max(dataset, function(d) { return d.GDP;})])
+            //             .range([0, canvas_width]);
+
+            var yScale;
+            // values range from 15 to 84 so need a linear scale for y
+            yScale = d3.scale.linear()  // yScale is height of graphic
+                            .domain([15, d3.max(filtered_dataset, function(d) {return d.LifeExp;})]) // input domain
+                            // remember y starts on top going down so we need to invert
+                            .range([canvas_height - padding, padding]);
+
+            // Define X axis
+            var xAxis = d3.svg.axis()
+                            .scale(xScale)
+                            .orient("bottom")
+                            .ticks(10);
+
+            // Define Y axis
+            var yAxis = d3.svg.axis()
+                            .scale(yScale)
+                            .orient("left")
+                            .ticks(10);
+
+            // Create SVG element
+            var svg = d3.select("body")
+                // Place for our visualization
+                .append("svg")
+                .attr("width", canvas_width)
+                .attr("height", canvas_height)
+
+            // get the current year in the background
+            svg.selectAll("text")
+                .data(filtered_dataset)
+                .enter()
+                .append("text")
+                .text(function(d) {return d.Year;})
+                .attr("x", canvas_width/5)
+                .attr("y", canvas_height/1.75)
+                .attr("font-family", "Courier New")
+                .attr("font-size", "400px")
+                .attr("fill", "lightgrey");
+                window.alert("data loading complete")
+
+            // Create Circles
+            svg.selectAll("circle")
+                .data(filtered_dataset)
+                .enter()
+                .append("circle")
+                    // x axis -> GDP/capita (index[5])
+                    .attr("cx", function(d) {return (d.GDP)/20;})
+                    // y axis -> Life Expectancy (index[4])
+                    .attr("cy", function(d) {return (canvas_height - (d.LifeExp*5));})
+                    .attr("r", function(d) {return Math.sqrt(d.Population)/500; })
+                    .attr("opacity", 1)
+                    .attr("fill", function(d) {
+                        if (d.Region=="Europe"){return "rgb(255,231,0)";}    //yellow
+                        else if(d.Region=="North America"){return "orange";}  // dark green
+                        else if(d.Region=="South America"){return "rgb(127,235,0)";} // light green
+                        else if(d.Region=="Central America"){return "purple";} // light green
+                        else if(d.Region=="Asia"){return "rgb(255,88,114)";}     //red
+                        else {return "rgb(0,213,233)";}  //blue for Australia-Oceania
+                    })
+                    .style("stroke", "black");
+
+                    // add titles to each bubble
+                    svg.selectAll("text")
+                       .data(filtered_dataset)
+                       .enter()
+                       .append("text")
+                       .text(function(d) {
+                             return d.Country;})
+                         .attr("x", function(d) {
+                             return d.GDP/20;
+                        })
+                        .attr("y", function(d) {
+                             return (canvas_height - (d.LifeExp*5));
+                        })
+                        .attr("font-family", "sans-serif")
+                        .attr("font-size", "10px")
+                        .attr("fill", "black");
+
+            // Add to X axis
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + (canvas_height - padding) +")")
+                .call(xAxis);
+
+            // Add to Y axis
+            svg.append("g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(" + padding +",0)")
+                .call(yAxis);
+
+                };
+        </script>
+        </div>
+
+        <div id="selection_bar">
+
+        </div>
+  </body>
+</html>
