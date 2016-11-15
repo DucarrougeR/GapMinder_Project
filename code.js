@@ -49,6 +49,9 @@ function generateVis() {
 	var labels = svg.selectAll("text.countries")
 		.data(filtered_data, function key(d) { return d.Country;} );
 
+	var flags = svg.selectAll("image")
+		.data(filtered_data, function key(d) { return d.Country;} );
+
 	/*
 	================
 	UPDATE SELECTION
@@ -63,6 +66,11 @@ function generateVis() {
 				return e.Country === d.Country
 			})
 			temp.style("opacity", 1);
+
+			var flag = flags.filter(function(c) {
+				return c.Country === d.Country
+			})
+			flag.style("opacity", 1);
 		})
 		.on("mouseout", function(d) {
 			circles.filter(function(x) { return d.Country != x.Country; })
@@ -73,10 +81,15 @@ function generateVis() {
 				return e.Country === d.Country
 			})
 			temp.style("opacity", 0);
+
+			var flag = flags.filter(function(c) {
+				return c.Country === d.Country
+			})
+			flag.style("opacity", 0);
 		})
 		.transition()
 		.ease("cubic-in-out")
-		.duration(1000)
+		.duration(4000)
 		.attr("cx", function(d) { return xScale(+d.GDP); })
 		.attr("cy", function(d) { return yScale(+d.LifeExp); })
 		.attr("r", function(d) { return rScale(+d.Population); })
@@ -103,6 +116,11 @@ function generateVis() {
 				return e.Country === d.Country
 			})
 			temp.style("opacity", 1);
+
+			var flag = flags.filter(function(c) {
+				return c.Country === d.Country
+			})
+			flag.style("opacity", 1);
 		})
 		.on("mouseout", function(d) {
 			circles.filter(function(x) { return d.Country != x.Country; })
@@ -113,6 +131,11 @@ function generateVis() {
 				return e.Country === d.Country
 			})
 			temp.style("opacity", 0);
+
+			var flag = flags.filter(function(c) {
+				return c.Country === d.Country
+			})
+			flag.style("opacity", 0);
 		})
 		.transition()
 		.attr("cx", function(d) { return xScale(+d.GDP); })
@@ -137,6 +160,19 @@ function generateVis() {
 		.attr("class", "countries")
 		.attr("opacity", 0)
 		.text(function(d) { return d.Country; });
+
+	flags.enter()
+		.append("image")
+		.attr("xlink:href", function(d) {
+			if (d.Code == "SS") {
+				return "./Flag_of_South_Sudan.svg";
+			} else {
+			return "http://www.geognos.com/api/en/countries/flag/"+ d.Code + ".png";}} )
+		.attr("height", "50px")
+		.attr("width", "50px")
+		.attr("x", svg_width - padding - 50)
+		.attr("y", svg_height - 2 * padding)
+		.style("opacity", 0);
 	/*
 	==============
 	EXIT SELECTION
@@ -177,7 +213,7 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 		rScale = d3.scale.sqrt()
 				.domain([d3.min(dataset, function(d) { return +d.Population;} ),
 				d3.max(dataset, function(d) { return +d.Population; })])
-				.range([3, 37]);
+				.range([5, 45]);
 
 		xAxis = d3.svg.axis()
 			.scale(xScale)
@@ -234,6 +270,6 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 			title.text(display_year);
 
 			generateVis();
-		},1000);
+		},4000);
 	}
 });
