@@ -1,7 +1,7 @@
 var dataset;
 var svg_width = 1200;
 var svg_height = 600;
-var padding = 30;
+var padding = 50;
 
 var xScale;
 var yScale;
@@ -12,13 +12,6 @@ var xAxis;
 
 var display_year = 1900;
 
-
-// Built-in D3 scale for ordinal values
-// Use to colour regions
-var c10 = d3.scale.category10()
-	.domain(["Asia", "Europe", "Africa", "South America", "North America",
-			"Central America", "Australia", "Oceania"]);
-
 function yearFilter(value) {
 	return (value.Year == display_year)
 };
@@ -27,15 +20,16 @@ function yearFilter(value) {
 var svg = d3.select("body")
 	.append("svg")
 	.attr("width", svg_width)
-	.attr("height", svg_height)
-	.style("background", "lightblue");
+	.attr("height", svg_height);
 
 var title = svg.append("text")
 	.text(display_year)
 	.attr("x", svg_width/2)
 	.attr("y", svg_height/2)
 	.attr("text-anchor", "middle")
-	.style("font-family", "sans-serif");
+	.attr("fill", "lightgrey")
+	.attr("font-size", "400px")
+	.attr("font-family", "Courier New");
 
 // Function to perform the data joins
 function generateVis() {
@@ -82,7 +76,7 @@ function generateVis() {
 		})
 		.transition()
 		.ease("cubic-in-out")
-		.duration(2000)
+		.duration(1000)
 		.attr("cx", function(d) { return xScale(+d.GDP); })
 		.attr("cy", function(d) { return yScale(+d.LifeExp); })
 		.attr("r", function(d) { return rScale(+d.Population); })
@@ -120,12 +114,20 @@ function generateVis() {
 			})
 			temp.style("opacity", 0);
 		})
+		.transition()
 		.attr("cx", function(d) { return xScale(+d.GDP); })
 		.attr("cy", function(d) { return yScale(+d.LifeExp); })
 		.attr("r", function(d) { return rScale(+d.Population); })
 		.attr("stroke", "black")
 		.attr("stroke-width", "1px")
-		.attr("fill", function(d) { return c10(d.Region); } )
+	    	.attr("fill", function(d) {
+			if (d.Region=="Europe"){return "rgb(255,231,0)";}    //yellow
+			else if(d.Region=="North America"){return "orange";}  // dark green
+			else if(d.Region=="South America"){return "rgb(127,235,0)";} // light green
+			else if(d.Region=="Central America"){return "purple";} // light green
+			else if(d.Region=="Asia"){return "rgb(255,88,114)";}     //red
+			else {return "rgb(0,213,233)";}  //blue for Australia-Oceania
+		});
 	
 	labels.enter()
 		.append("text")
@@ -148,17 +150,6 @@ function generateVis() {
 
 
 	// Add in the axes.  Performed last, so that they appear on top
-	svg.append("g")
-		.attr("class", "yaxis")
-		.attr("id", "yaxis")
-		.attr("transform", "translate("+ padding +",0)")
-		.call(yAxis);
-
-	svg.append("g")
-		.attr("class", "xaxis")
-		.attr("id", "xaxis")
-		.attr("transform", "translate(0,"+ (svg_height - padding) +")")
-		.call(xAxis);
 };
 
 
@@ -202,6 +193,32 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 		// Run the visualisation function
 		generateVis();
 
+		svg.append("g")
+			.attr("class", "yaxis")
+			.attr("id", "yaxis")
+			.attr("transform", "translate("+ padding +",0)")
+			.call(yAxis);
+
+		svg.append("g")
+			.attr("class", "xaxis")
+			.attr("id", "xaxis")
+			.attr("transform", "translate(0,"+ (svg_height - padding) +")")
+			.call(xAxis);
+
+		// Add in Y-axis label
+		svg.append("text")
+			.attr("text-anchor", "middle")
+			.attr("font-family", "sans serif")
+			.attr("transform", "translate("+ (padding/3) +","+(svg_height/2)+")rotate(-90)")
+			.text("Life Expectancy (Years)");
+
+		// Add in X-axis label
+		svg.append("text")
+			.attr("text-anchor", "middle")
+			.attr("font-family", "sans serif")
+			.attr("transform", "translate("+ (svg_width/2) +","+(svg_height - padding/4)+")")
+			.text("Income per Capita (inflation adjusted USD)");
+
 		// Run through all of the years
 		setInterval(function() {
 //			console.log((dataset.filter(function(d) { return d.Year == display_year; })).length);
@@ -217,6 +234,6 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 			title.text(display_year);
 
 			generateVis();
-		},500);
+		},1000);
 	}
 });
