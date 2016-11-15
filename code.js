@@ -71,6 +71,8 @@ function generateVis() {
 				return c.Country === d.Country
 			})
 			flag.style("opacity", 1);
+			d3.selectAll("polygon")
+				.attr("stroke", "black");
 		})
 		.on("mouseout", function(d) {
 			circles.filter(function(x) { return d.Country != x.Country; })
@@ -86,6 +88,8 @@ function generateVis() {
 				return c.Country === d.Country
 			})
 			flag.style("opacity", 0);
+			d3.selectAll("polygon")
+				.attr("stroke", "none");
 		})
 		.transition()
 		.ease("cubic-in-out")
@@ -121,6 +125,8 @@ function generateVis() {
 				return c.Country === d.Country
 			})
 			flag.style("opacity", 1);
+			d3.selectAll("polygon")
+				.attr("stroke", "black");
 		})
 		.on("mouseout", function(d) {
 			circles.filter(function(x) { return d.Country != x.Country; })
@@ -136,6 +142,8 @@ function generateVis() {
 				return c.Country === d.Country
 			})
 			flag.style("opacity", 0);
+			d3.selectAll("polygon")
+				.attr("stroke", "none");
 		})
 		.transition()
 		.attr("cx", function(d) { return xScale(+d.GDP); })
@@ -168,11 +176,16 @@ function generateVis() {
 				return "./Flag_of_South_Sudan.svg";
 			} else {
 			return "http://www.geognos.com/api/en/countries/flag/"+ d.Code + ".png";}} )
-		.attr("height", "50px")
-		.attr("width", "50px")
-		.attr("x", svg_width - padding - 50)
-		.attr("y", svg_height - 2 * padding)
+		.attr("height", "150px")
+		.attr("width", "150px")
+		.attr("x", svg_width - padding - 150)
+		.attr("y", svg_height - 4 * padding)
 		.style("opacity", 0);
+
+	svg.append("polygon")
+		.attr("points", "1000,437, 1150,437, 1150,513, 1000,513")
+		.attr("fill", "none")
+		.attr("stroke", "none");
 	/*
 	==============
 	EXIT SELECTION
