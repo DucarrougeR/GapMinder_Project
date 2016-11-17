@@ -428,7 +428,7 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 				// Update the display year between each loop
 				if (display_year < 1950) {
 					display_year = display_year + 10;
-				} else if (display_year < 2010) {
+				} else if (display_year < 2015) {
 					display_year = display_year + 1;
 				} else {
 					clearInterval(playInterval);
@@ -472,7 +472,7 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 				// Update the display year between each loop
 				if (display_year < 1950) {
 					display_year = display_year + 10;
-				} else if (display_year < 2010) {
+				} else if (display_year < 2015) {
 					display_year = display_year + 1;
 				} else {
 					clearInterval(playInterval);
@@ -499,7 +499,7 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 				// Update the display year between each loop
 				if (display_year < 1950) {
 					display_year = display_year + 10;
-				} else if (display_year < 2010) {
+				} else if (display_year < 2015) {
 					display_year = display_year + 1;
 				} else {
 					clearInterval(playInterval);
@@ -526,7 +526,7 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 				// Update the display year between each loop
 				if (display_year < 1950) {
 					display_year = display_year + 10;
-				} else if (display_year < 2010) {
+				} else if (display_year < 2015) {
 					display_year = display_year + 1;
 				} else {
 					clearInterval(playInterval);
