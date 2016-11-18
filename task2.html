@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Info Viz | Task 2</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
+    <script src="https://d3js.org/d3-ease.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-selection.v1.min.js"></script>
+    <script src="https://d3js.org/d3-timer.v1.min.js"></script>
+    <script src="https://d3js.org/d3-transition.v1.min.js"></script>  
+    
+        
+        <style type="text/css">
+        /* Styling our nav bar, used to control animations */
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                width: 200px;
+            }
+            li a {
+                display: block;
+                color: #000;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+            /* Change the link color on hover */
+            li a:hover {
+                background-color: #555;
+                color: white;
+            }
+            #navBar{
+                height: 100vh;
+                background-color: #f1f1f1;
+                float: left;
+                display: inline-block;
+            }
+        /* Styling our divs to hold the visual elements*/ 
+            #visualizations{
+                float: left;
+                border: 1px solid blue;
+                height: 100vh;
+                width: 1100px;
+            }
+                #upperLeft, #upperRight {
+                    float: left;
+                    color: white;
+                }
+                #upperLeft {
+                    border: 1px solid black;
+                    width: 500px;
+                    float: left;
+                }
+                #upperRight {           /* Add a space between charts for clarity */
+                    border: 1px solid black; 
+                    width: 500px;
+                    float: right;
+                }
+                #lowerMap{
+                    border: 2px solid red;
+                    position: absolute;
+                    bottom: 0;
+                    margin-left: 100px;
+                }
+        </style>
+
+    </head>
+    <body>
+
+    <div id="navBar">
+        <ul>
+            <li>Task 2</li>
+            <li>Michael McNulty</li>
+            <li>Romain Ducarrouge</li>
+            <li><img src="./images/icon_play.png" alt="player icon" height="80px" width="80px"></img></li>
+            <li><img src="./images/icon_pause.jpg" alt="player icon" height="80px" width="80px"></img></li>
+            <li><img src="./images/icon_stop.jpg" alt="player icon" height="80px" width="80px"></img></li>
+        </ul>
+    </div>
+
+<div id="visualizations">
+
+    <div id="upperLeft">
+        <script type="text/javascript">
+
+// make a dashboard showing various aspects of the data
+    // make a button allowing user to choose to see GPD or Life Expectancy
+        // yearly animated barchart with avg VALUE FOR CHOSEN ELEM per Government type
+        // yearly animated barchart with avg VALUE FOR CHOSEN ELEM per Government type
+        // yearly animated chloropleth map 
+
+            //Width and height
+            var w = 500;
+            var h = 300;
+            
+            var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13];
+            // d3.csv("./Gapminder_All_Time.csv", function(error, data) {
+            // // Handle errors
+            // if (error) {
+            //     console.log("Something went wrong while attempting to load the data");
+            // } else {
+            //     console.log("Data loaded successfully");
+            // // Assign the loaded data to a variable
+            // dataset = data;
+            // }
+            
+            var xScale = d3.scale.ordinal()
+                            .domain(d3.range(dataset.length))
+                            .rangeRoundBands([0, w], 0.05);
+            var yScale = d3.scale.linear()
+                            .domain([0, d3.max(dataset)])
+                            .range([0, h]);
+            
+            //Create SVG element
+            var svg = d3.select("#upperLeft")
+                        .append("svg")
+                        .attr("width", w)
+                        .attr("height", h);
+            //Create bars
+            svg.selectAll("rect")
+               .data(dataset)
+               .enter()
+               .append("rect")
+               .attr("x", function(d, i) {
+                    return xScale(i);
+               })
+               .attr("y", function(d) {
+                    return h - yScale(d);
+               })
+               .attr("width", xScale.rangeBand())
+               .attr("height", function(d) {
+                    return yScale(d);
+               })
+               .attr("fill", function(d) {
+                    return "rgb(210, 0, " + (d * 10) + ")";
+               });
+            //Create labels
+            svg.selectAll("text")
+               .data(dataset)
+               .enter()
+               .append("text")
+               .text(function(d) {
+                    return d;
+               })
+               .attr("text-anchor", "middle")
+               .attr("x", function(d, i) {
+                    return xScale(i) + xScale.rangeBand() / 2;
+               })
+               .attr("y", function(d) {
+                    return h - yScale(d) + 14;
+               })
+               .attr("font-family", "sans-serif")
+               .attr("font-size", "11px")
+               .attr("fill", "white");
+
+//On click, start the animation to iterate through the years           
+            d3.select("img")
+                .on("click", function() {
+                    // ADD CODE HERE
+
+
+                    //Update all rects
+                    svg.selectAll("rect")
+                       .data(dataset)
+                       .transition() 
+                       .attr("y", function(d) {return h - yScale(d);})
+                       .attr("height", function(d) {return yScale(d);})
+                       .attr("fill", function(d) {return "rgb(0, 0, " + (d * 10) + ")";});
+                    //Update all labels
+                    svg.selectAll("text")
+                       .data(dataset)
+                       .text(function(d) {return d;})
+                       .attr("x", function(d, i) {return xScale(i) + xScale.rangeBand() / 2;})
+                       .attr("y", function(d) {return h - yScale(d) + 14;});                
+                });
+        </script>
+    </div>
+
+    <div id="upperRight">
+        <script type="text/javascript">
+            //Width and height
+            var w = 500;
+            var h = 300;
+            
+            var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13];
+
+            var xScale = d3.scale.ordinal()
+                            .domain(d3.range(dataset.length))
+                            .rangeRoundBands([0, w], 0.05);
+            var yScale = d3.scale.linear()
+                            .domain([0, d3.max(dataset)])
+                            .range([0, h]);
+            
+            //Create SVG element
+            var svg = d3.select("#upperRight")
+                        .append("svg")
+                        .attr("width", w)
+                        .attr("height", h);
+            //Create bars
+            svg.selectAll("rect")
+               .data(dataset)
+               .enter()
+               .append("rect")
+               .attr("x", function(d, i) {
+                    return xScale(i);
+               })
+               .attr("y", function(d) {
+                    return h - yScale(d);
+               })
+               .attr("width", xScale.rangeBand())
+               .attr("height", function(d) {
+                    return yScale(d);
+               })
+               .attr("fill", function(d) {
+                    return "rgb(0, 0, " + (d * 10) + ")";
+               });
+            //Create labels
+            svg.selectAll("text")
+               .data(dataset)
+               .enter()
+               .append("text")
+               .text(function(d) {
+                    return d;
+               })
+               .attr("text-anchor", "middle")
+               .attr("x", function(d, i) {
+                    return xScale(i) + xScale.rangeBand() / 2;
+               })
+               .attr("y", function(d) {
+                    return h - yScale(d) + 14;
+               })
+               .attr("font-family", "sans-serif")
+               .attr("font-size", "11px")
+               .attr("fill", "white");
+
+//On click, start the animation to iterate through the years           
+            d3.select("img")
+                .on("click", function() {
+                    // ADD CODE HERE
+
+
+                    //Update all rects
+                    svg.selectAll("rect")
+                       .data(dataset)
+                       .transition() 
+                       .attr("y", function(d) {return h - yScale(d);})
+                       .attr("height", function(d) {return yScale(d);})
+                       .attr("fill", function(d) {return "rgb(0, 0, " + (d * 10) + ")";});
+                    //Update all labels
+                    svg.selectAll("text")
+                       .data(dataset)
+                       .text(function(d) {return d;})
+                       .attr("x", function(d, i) {return xScale(i) + xScale.rangeBand() / 2;})
+                       .attr("y", function(d) {return h - yScale(d) + 14;});                
+                });
+        </script>
+    </div>
+
+
+
+<div id="lowerMap" style="width: 900px; height: 400px;"> <!-- Creating the lower container for chloropleth map -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>      
+    <script type="text/javascript" src='https://www.google.com/jsapi'>
+      google.charts.load('upcoming', {'packages':['geochart']});
+      google.charts.setOnLoadCallback(drawRegionsMap);
+
+      // google.load('visualization', '1', {
+      //   'packages': ['geochart'],
+      //   'callback': drawRegionsMap
+      // });
+
+      function drawRegionsMap() {
+        // set up the table to use for the visualization
+        var data = new google.visualization.DataTable();
+            data.addColumn('string', "Country");
+            data.addColumn('number', "GDP");
+            data.addColumn('number', "LifeExp");
+        
+            data.addRow(['France', 10, 20]);
+            data.addRow(['USA', 11, 21]);
+            data.addRow(['China', 12, 22]);
+            data.addRow(['Australia', 13, 23]);
+
+            ;
+
+        // add row
+
+        var options = {
+            colorAxis: {
+                colors: ['lightblue', 'cyan', 'navy']
+            }
+        };
+
+        var chart = new google.visualization.GeoChart(document.getElementById('lowerMap'));
+
+        chart.draw(data, options);
+      }
+    </script>
+</div>
+
+</div>
+</body>
+</html>

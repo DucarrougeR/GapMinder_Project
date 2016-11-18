@@ -1,0 +1,4 @@
+1) in command line type:
+> python -m http.server
+
+2) then open HTML file test2

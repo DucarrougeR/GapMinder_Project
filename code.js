@@ -316,7 +316,7 @@ function generateVis() {
 		.append("image")
 		.attr("xlink:href", function(d) {
 			if (d.Code == "SS") {
-				return "./Flag_of_South_Sudan.svg";
+				return "./images/Flag_of_South_Sudan.svg";
 			} else {
 			return "http://www.geognos.com/api/en/countries/flag/"+ d.Code + ".png";}} )
 		.attr("height", "150px")
