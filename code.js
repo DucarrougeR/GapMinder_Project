@@ -100,6 +100,10 @@ function generateVis() {
 					"Central America", "Asia", "Oceania", "Australia"])
 			.enter()
 			.append("rect")
+			.attr("opacity", function(d) {
+				if(d=="Central America") {
+					return 0.8;
+				}})
 			.attr("fill", function(d) {
 				if (d=="Europe"){return "rgb(255,231,0)";}    //yellow
 				else if(d=="North America"){return "orange";}  // dark green
@@ -127,11 +131,9 @@ function generateVis() {
 			.append("text")
 			.text(function(d) { return d;})
 			.attr("text-anchor", "middle")
-			.attr("font-size", "14px")
-			.attr("fill", "white")
-			.attr("paint-order", "stroke")
-			.attr("stroke", "black")
-			.attr("stroke-width", 2)
+			.attr("font-size", "16px")
+			.attr("fill", "black")
+			.attr("stroke-width", 3)
 			.attr("x", svg_width - padding - 50)
 			.attr("y", function(d, i) {
 				return svg_height - i*32 - 168;
@@ -416,15 +418,8 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 	}
 
 
-	// Add a function to the play button that runs the animation when clicked
-	d3.select(".play_button")
-		.on("click", function() {
-			console.log("Play Button clicked!");
-
-			// Interval function
-			playInterval = setInterval(function() {
-				console.log("Running loop");
-
+	var start = function() {
+		playInterval = setInterval(function() {
 				// Update the display year between each loop
 				if (display_year < 1950) {
 					display_year = display_year + 10;
@@ -442,104 +437,48 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 
 				console.log("Year: " + display_year);
 			},speed);
-		});
+		};
 
-	// Stop the animation running
+	var stop = function() {
+		clearInterval(playInterval)
+	};
+
+	var reset = function() {
+		clearInterval(playInterval);	// Stops the current animation
+		console.log("Reset Button clicked!");
+		display_year = 1900;		// Resets the year
+		generateVis();			// Runs the visualisation once
+		title.text(display_year);	// Reset the background text
+	};
+
+	// Add a function to the play button that runs the animation when clicked
+	d3.select(".play_button")
+		.on("click", start);
+
 	d3.select(".stop_button")
-		.on("click", function(d) {
-			console.log("Stop Button clicked!");
-			clearInterval(playInterval);
-			console.log("Year: " + display_year);
-		});
-
-	// Reset the animation back to 1900
+		.on("click", stop);
+	
 	d3.select(".reset_button")
-		.on("click", function() {
-			clearInterval(playInterval);	// Stops the current animation
-			console.log("Reset Button clicked!");
-			display_year = 1900;		// Resets the year
-			generateVis();			// Runs the visualisation once
-			title.text(display_year);	// Reset the background text
-		});
-
+		.on("click", reset);
+				
 	d3.select("#fast_button")
 		.on("click", function() {
 			speed = 200
-			clearInterval(playInterval)
-			playInterval = setInterval(function() {
-				console.log("Running loop");
-
-				// Update the display year between each loop
-				if (display_year < 1950) {
-					display_year = display_year + 10;
-				} else if (display_year < 2015) {
-					display_year = display_year + 1;
-				} else {
-					clearInterval(playInterval);
-				}
-
-				// Change the year that is displayed in the background
-				title.text(display_year);
-
-				// Run the visualisation function with the current dispaly year
-				generateVis();
-
-				console.log("Year: " + display_year);
-			},speed);
-
+			stop();
+			start();
 		})
 
 	d3.select("#medium_button")
 		.on("click", function() {
 			speed = 500
-			clearInterval(playInterval)
-			playInterval = setInterval(function() {
-				console.log("Running loop");
-
-				// Update the display year between each loop
-				if (display_year < 1950) {
-					display_year = display_year + 10;
-				} else if (display_year < 2015) {
-					display_year = display_year + 1;
-				} else {
-					clearInterval(playInterval);
-				}
-
-				// Change the year that is displayed in the background
-				title.text(display_year);
-
-				// Run the visualisation function with the current dispaly year
-				generateVis();
-
-				console.log("Year: " + display_year);
-			},speed);
-
+			stop();
+			start();
 		})
 
 	d3.select("#slow_button")
 		.on("click", function() {
 			speed = 1000
-			clearInterval(playInterval)
-			playInterval = setInterval(function() {
-				console.log("Running loop");
-
-				// Update the display year between each loop
-				if (display_year < 1950) {
-					display_year = display_year + 10;
-				} else if (display_year < 2015) {
-					display_year = display_year + 1;
-				} else {
-					clearInterval(playInterval);
-				}
-
-				// Change the year that is displayed in the background
-				title.text(display_year);
-
-				// Run the visualisation function with the current dispaly year
-				generateVis();
-
-				console.log("Year: " + display_year);
-			},speed);
-
+			stop();
+			start();
 		})
 });
