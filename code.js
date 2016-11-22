@@ -259,6 +259,7 @@ function generateVis() {
 		.append("circle")
 		// On hover, change fade out all other circles and show info for this country
 		.on("mouseover", function(d) {
+			d3.select(this).attr("stroke-width", 2)
 			circles.filter(function(x) { return d.Country != x.Country; })
 			.transition()
 			.style("opacity", 0.4);
@@ -295,6 +296,7 @@ function generateVis() {
 		
 		// Restore original display when not hovered with mouse
 		.on("mouseout", function(d) {
+			d3.select(this).attr("stroke-width", 1)
 			circles.filter(function(x) { return d.Country != x.Country; })
 			.transition()
 			.style("opacity", 1);
