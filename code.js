@@ -114,6 +114,7 @@ controls.append("input")
 		// Check if it is within our data range
 		if (yr > 2015 || yr < 1900) {
 			alert("Please enter a year between 1900 and 2015");
+		// Check for non numerical input
 		} else if (isNaN(yr)) {
 			alert("Please enter a year (number) between 1900 and 2015");
 		} else {
