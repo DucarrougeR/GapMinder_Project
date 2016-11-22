@@ -4,7 +4,10 @@ var svg_width = 1200;	// Set canvas width
 var svg_height = 600;	// Set canvas height
 var padding = 50;	// Set canvas padding
 var playInterval;	// Function to play animation
-var speed = 500;
+var speed = 500;	// Variable to control animation speed
+var stop;		// Functions to change state of animation
+var start;
+var reset;
 
 var xScale;		// d3 Scale for X-axis
 var yScale;		// d3 Scale for Y-axis
@@ -37,50 +40,115 @@ var title = svg.append("text")
 	.attr("font-size", "400px")
 	.attr("font-family", "Courier New");
 
+
+// Create a div to house all of the controls for the visualisation
 var controls = d3.select("body")
 	.append("div")
 	.style("display", "inline-block")
 	.attr("class", "controls")
-	.attr("width", svg_width/2)
+	.attr("width", svg_width)
 	.attr("height", 50);
 
+// Add Play, Pause and Reset Buttons
 controls.append("button")
 	.attr("class", "play_button")
-	.style("padding", "10px 40px")
+	.style("padding", "10px 30px")
 	.style("font-size", "16px")
-	.style("margin-left", "50px")
+	.style("margin-left", "110px")
 	.text("Play")
 
 controls.append("button")
 	.attr("class", "stop_button")
-	.style("padding", "10px 40px")
+	.style("padding", "10px 25px")
 	.style("font-size", "16px")
 	.text("Pause")
 
 controls.append("button")
 	.attr("class", "reset_button")
 	.style("font-size", "16px")
-	.style("padding", "10px 40px")
+	.style("padding", "10px 30px")
 	.text("Reset")
 
+// Add Slow, Medium and Fast Buttons
 controls.append("button")
 	.attr("id", "slow_button")
-	.style("padding", "10px 40px")
+	.style("padding", "10px 30px")
 	.style("font-size", "16px")
-	.style("margin-left", "50px")
+	.style("margin-left", "60px")
 	.text("Slow")
 
 controls.append("button")
 	.attr("id", "medium_button")
-	.style("padding", "10px 40px")
+	.style("padding", "10px 20px")
 	.style("font-size", "16px")
 	.text("Medium")
 
 controls.append("button")
 	.attr("id", "fast_button")
 	.style("font-size", "16px")
-	.style("padding", "10px 40px")
+	.style("padding", "10px 30px")
 	.text("Fast")
+
+// Add an input box for selecting a particular year
+controls.append("input")
+	.style("width", "100px")
+	.style("padding", "10px 0px")
+	.style("margin-left", "60px")
+	.style("font-size", "16px")
+	.attr("type", "text")
+	.attr("id", "yearSelect")
+	.attr("placeholder", "Select a year");
+
+// Button to trigger the input year
+controls.append("input")
+	.attr("type", "button")
+	.style("padding", "10px 30px")
+	.style("font-size", "16px")
+	.attr("value", "Go")
+
+	// On click, call a function that updates the display
+	.on("click", function() {
+		var yr = document.getElementById("yearSelect").value; // Get the value that was input into the text box
+
+
+		// Check if it is within our data range
+		if (yr > 2015 || yr < 1900) {
+			alert("Please enter a year between 1900 and 2015");
+		} else {
+
+			// Check if it is a year withing the data range, but in the first
+			// 50 years where we do not have yearly data
+
+
+			// For example, if they enter a year between 1900 and 1910, display the data for 1900
+			if (yr >= 1900 && yr < 1910) {
+				alert("Data only available every 10 years between 1900 and 1950.  Defaulting to 1900");
+				yr = 1900;
+			}
+			else if (yr >= 1911 && yr < 1920) {
+				alert("Data only available every 10 years between 1900 and 1950.  Defaulting to 1910");
+				yr = 1910;
+			}
+			else if (yr >= 1921 && yr < 1930) {
+				alert("Data only available every 10 years between 1900 and 1950.  Defaulting to 1920");
+				yr = 1920;
+			}
+			else if (yr >= 1931 && yr < 1940) {
+				alert("Data only available every 10 years between 1900 and 1950.  Defaulting to 1930");
+				yr = 1930;
+			}
+			else if (yr >= 1941 && yr < 1950) {
+				alert("Data only available every 10 years between 1900 and 1950.  Defaulting to 1940");
+				yr = 1940;
+			}
+
+			stop(); // Stop the animation if it is currently running
+			display_year = yr; // Update the year variable
+			generateVis();	// Update the display
+			title.text(display_year);  // Update the background text
+		}
+	});
+
 
 // Function to handle and update the data joins
 function generateVis() {
@@ -173,7 +241,7 @@ function generateVis() {
 		
 	// Update the country names and years
 	labels.text(function(d) { return d.Country + ", " + d.Year; });
-
+	
 	// Update the population text
 	pops.text(function(d) { return "Population: " + d.Population; });
 
@@ -191,6 +259,7 @@ function generateVis() {
 		.append("circle")
 		// On hover, change fade out all other circles and show info for this country
 		.on("mouseover", function(d) {
+			d3.select(this).attr("stroke-width", 2)
 			circles.filter(function(x) { return d.Country != x.Country; })
 			.transition()
 			.style("opacity", 0.4);
@@ -227,6 +296,7 @@ function generateVis() {
 		
 		// Restore original display when not hovered with mouse
 		.on("mouseout", function(d) {
+			d3.select(this).attr("stroke-width", 1)
 			circles.filter(function(x) { return d.Country != x.Country; })
 			.transition()
 			.style("opacity", 1);
@@ -249,6 +319,7 @@ function generateVis() {
 			var flag = flags.filter(function(c) {
 				return c.Country === d.Country
 			})
+
 			flag.style("opacity", 0);
 			d3.selectAll("polygon")
 				.attr("stroke", "none");
@@ -344,6 +415,7 @@ function generateVis() {
 	labels.exit().remove();
 
 
+
 };
 
 
@@ -418,7 +490,7 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 	}
 
 
-	var start = function() {
+	start = function() {
 		playInterval = setInterval(function() {
 				// Update the display year between each loop
 				if (display_year < 1950) {
@@ -439,11 +511,11 @@ d3.csv("./Gapminder_All_Time.csv", function(error, data) {
 			},speed);
 		};
 
-	var stop = function() {
+	stop = function() {
 		clearInterval(playInterval)
 	};
 
-	var reset = function() {
+	reset = function() {
 		clearInterval(playInterval);	// Stops the current animation
 		console.log("Reset Button clicked!");
 		display_year = 1900;		// Resets the year
