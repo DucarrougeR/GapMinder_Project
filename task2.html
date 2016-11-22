@@ -58,113 +58,11 @@
     </head>
     <body>
 
-<!-- Get the required libraries for the JS charts -->
-<script src="https://www.google.com/jsapi"></script>
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript" src="/lib/jquery.csv.min.js"></script>
-
-<script type="text/javascript">
-        // get the packages for charts and map
-        google.charts.load("current", {"packages":["corechart"]});
-        google.charts.setOnLoadCallback(drawViz);
-//Function to load the csv data into an array
-var dataset;
+<div class='tableauGapMinder' id='viz1479837304304' style='position: relative'><noscript><a href='#'><img alt='InfoViz_Task2.1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;In&#47;InfoViz_Task2&#47;InfoViz_Task2_1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='site_root' value='' /><param name='name' value='InfoViz_Task2&#47;InfoViz_Task2_1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;In&#47;InfoViz_Task2&#47;InfoViz_Task2_1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1479837304304');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.minWidth='1424px';vizElement.style.maxWidth='1724px';vizElement.style.width='100%';vizElement.style.minHeight='629px';vizElement.style.maxHeight='929px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
 
 
-//Function to draw the boxplot for the LifeExp values
-    function drawViz() {
-// Boxplot
-
-   //     $.get("Gapminder_All_Time.csv", function(csvString) {
-   //        // transform the CSV string into a 2-dimensional array
-   //        var arrayData = $.csv.toArrays(csvString, {onParseValue: $.csv.hooks.castToScalar});
-
-   //        // this new DataTable object holds all the data
-   //        var data = new google.visualization.arrayToDataTable(arrayData);
-
-   //        // this view can select a subset of the data at a time
-   //        var view = new google.visualization.DataView(data);
-   //        view.setColumns([0,1]);
-
-//hard coded data
-        var box_data = google.visualization.arrayToDataTable([
-          ['Mon', 20, 28, 38, 45],
-          ['Tue', 31, 38, 55, 66],
-          ['Wed', 50, 55, 77, 80],
-          ['Thu', 77, 77, 66, 50],
-          ['Fri', 68, 66, 22, 15]
-          // Treat first row as data as well.
-        ], true);
-
-        var boxplot_options = {
-          legend:"none"
-        };
-        var boxplot = new google.visualization.CandlestickChart(document.getElementById("upperLeft"));
-
-        boxplot.draw(box_data, boxplot_options);
-//////////////////////////////////////////////////////////////////////////////////////////
-// Bar chart
-      var view = new google.visualization.DataView(box_data);
-      view.setColumns([0, 1,
-                       { calc: "stringify",
-                         sourceColumn: 1,
-                         type: "string",
-                         role: "annotation" },
-                       2]);
-
-      var bar_chart_options = {
-        title: "Average GDP",
-        width: 500,
-        height: 300,
-        bar: {groupWidth: "95%"},
-        legend: { position: "none" },
-      };
-      var barchart = new google.visualization.ColumnChart(document.getElementById("upperRight"));
-      barchart.draw(box_data, bar_chart_options);
-//////////////////////////////////////////////////////////////////////////////////////////
-// Map 
-        var map_data = google.visualization.arrayToDataTable([
-          ['Country', 'Popularity'],
-          ['Germany', 200],
-          ['United States', 300],
-          ['Brazil', 400],
-          ['Canada', 500],
-          ['France', 600],
-          ['RU', 700]
-        ]);
-        var map_options = {};
-        var map = new google.visualization.GeoChart(document.getElementById("lowerMap"));
-        map.draw(map_data, map_options);
-      }
-</script>
+<div class='tableauPlaceholder' id='viz1479837198515' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;TH&#47;TH9W76MTW&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='path' value='shared&#47;TH9W76MTW' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;TH&#47;TH9W76MTW&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1479837198515');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='1624px';vizElement.style.minHeight='629px';vizElement.style.maxHeight='929px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
 
 
-<div id="navBar">
-    <ul>
-        <li>Task 2</li>
-        <li>Michael McNulty</li>
-        <li>Romain Ducarrouge</li>
-    </ul>
-
-    <div id="playerButtons" style="margin-top: 100px">
-    <img id="play" src="./images/icon_play.png" alt="player icon" height="80px" width="80px"></img>
-    <img id="pause" src="./images/icon_pause.jpg" alt="player icon" height="80px" width="80px"></img>
-    <img id="stop" src="./images/icon_stop.jpg" alt="player icon" height="80px" width="80px"></img>
-    </div>
-</div>
-
-<div id="visualizations">
-
-    <div id="upperLeft" style='width: 500px; height:300px'>
-    <!-- Creating the upper left container for boxplot --></div>
-
-    <div id="upperRight" style='width: 500px; height:300px'>
-    <!-- Creating the upper right container for bar chart --></div>
-
-    <div id="lowerMap" style="width: 900px; height: 400px;"> 
-    <!-- Creating the lower container for chloropleth map --></div>
-
-</div>
 </body>
 </html>
