@@ -125,7 +125,7 @@ controls.append("input")
 
 
 			// For example, if they enter a year between 1900 and 1910, display the data for 1900
-			if (yr >= 1900 && yr < 1910) {
+			if (yr > 1900 && yr < 1910) {
 				alert("Data only available every 10 years between 1900 and 1950.  Defaulting to 1900");
 				yr = 1900;
 			}
@@ -178,12 +178,12 @@ function generateVis() {
 				}})
 			.attr("fill", function(d) {
 				if (d=="Europe"){return "rgb(255,231,0)";}    //yellow
-				else if(d=="North America"){return "orange";}  // dark green
-				else if(d=="South America"){return "rgb(127,235,0)";} // light green
-				else if(d=="Central America"){return "purple";} // light green
+				else if(d=="North America"){return "orange";}  // orange
+				else if(d=="South America"){return "rgb(127,235,0)";} //  green
+				else if(d=="Central America"){return "purple";} // purple
 				else if(d=="Asia"){return "rgb(255,88,114)";}     //red
-				else if(d=="Oceania"){return "cyan";}     //red
-				else {return "rgb(0,213,233)";}  //blue for Australia-Oceania
+				else if(d=="Oceania"){return "cyan";}     // cyan
+				else {return "rgb(0,213,233)";}  //blue for Australia
 			})
 			.attr("x", svg_width - padding - 100)
 			.attr("y", function(d, i) {
@@ -336,9 +336,9 @@ function generateVis() {
 		.attr("stroke-width", "1px")
 	    	.attr("fill", function(d) {
 			if (d.Region=="Europe"){return "rgb(255,231,0)";}    //yellow
-			else if(d.Region=="North America"){return "orange";}  // dark green
+			else if(d.Region=="North America"){return "orange";}  // orange
 			else if(d.Region=="South America"){return "rgb(127,235,0)";} // light green
-			else if(d.Region=="Central America"){return "purple";} // light green
+			else if(d.Region=="Central America"){return "purple";} // purple
 			else if(d.Region=="Asia"){return "rgb(255,88,114)";}     //red
 			else if(d.Region=="Oceania"){return "cyan";}     //cyan for Oceania
 			else {return "rgb(0,213,233)";}  //blue for Australia
@@ -424,7 +424,7 @@ function generateVis() {
 
 
 // Loading in the data
-d3.csv("./Gapminder_All_Time.csv", function(error, data) {
+d3.csv("./Documents/Datasets/Gapminder_All_Time.csv", function(error, data) {
 
 	// Handle errors
 	if (error) {

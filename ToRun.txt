@@ -1,4 +1,8 @@
 1) in command line type:
+locate the folder containing the code, then
 > python -m http.server
 
-2) then open HTML file test2
+2) then open file test2
+
+
+if device screen is smaller than 15.6 inches, you may need to zoom out in order to have the intended render.
